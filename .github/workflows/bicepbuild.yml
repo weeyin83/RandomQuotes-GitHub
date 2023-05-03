@@ -21,18 +21,20 @@ jobs:
       # Checkout code
     - uses: actions/checkout@main
 
-    # Log into Azure
+      # Log into Azure
     - uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    # Deploy Bicep file
+      # Deploy Bicep file
     - name: deploy
       uses: azure/arm-deploy@v1
       with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./main.bicep
-          parameters: 'storagePrefix=mystore storageSKU=Standard_LRS'
-          failOnStdErr: false
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./randomquotes.bicep
+        parameters: 'webSiteName=webappsarah appname=sarahapp skucode=S1'
+        failOnStdErr: false
     
