@@ -1,0 +1,38 @@
+# This workflow takes the Bicep files within the Bicep folder and zips them together.  Then pushes/uploads them to the Octopus Instance specified. 
+# Within the repo's secrets are the information relating to the Octopus Instance URL, API key and Space. 
+
+name: RandomQuotesBicepBuild
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - Bicep
+  workflow_dispatch: {}
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "Bicep Build"
+  BicepBuild:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+    # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./main.bicep
+          parameters: 'storagePrefix=mystore storageSKU=Standard_LRS'
+          failOnStdErr: false
+    

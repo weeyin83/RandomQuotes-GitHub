@@ -1,0 +1,167 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.46.61228",
+      "templateHash": "1147805432629602319"
+    }
+  },
+  "parameters": {
+    "webSiteName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "appname": {
+      "type": "string"
+    },
+    "skucode": {
+      "type": "string"
+    },
+    "osType": {
+      "type": "string",
+      "allowedValues": [
+        "windows"
+      ]
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appServicePlan",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "appname": {
+            "value": "[parameters('appname')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "skucode": {
+            "value": "[parameters('skucode')]"
+          },
+          "osType": {
+            "value": "[parameters('osType')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.46.61228",
+              "templateHash": "8390431054344291899"
+            }
+          },
+          "parameters": {
+            "appname": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "skucode": {
+              "type": "string"
+            },
+            "osType": {
+              "type": "string",
+              "allowedValues": [
+                "windows"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2021-03-01",
+              "name": "[parameters('appname')]",
+              "location": "[parameters('location')]",
+              "kind": "",
+              "tags": {},
+              "properties": {
+                "reserved": false
+              },
+              "sku": {
+                "name": "[parameters('skucode')]"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "productservicewebapp",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "webSiteName": {
+            "value": "[parameters('webSiteName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "planName": {
+            "value": "[parameters('appname')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.14.46.61228",
+              "templateHash": "16552574119515470574"
+            }
+          },
+          "parameters": {
+            "webSiteName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "planName": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/sites",
+              "apiVersion": "2021-03-01",
+              "name": "[parameters('webSiteName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "serverFarmId": "[parameters('planName')]",
+                "siteConfig": {
+                  "windowsFxVersion": "dotnetcore|6.0",
+                  "alwaysOn": true
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appServicePlan')]"
+      ]
+    }
+  ]
+}

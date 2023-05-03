@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.14.46.61228",
+      "templateHash": "16552574119515470574"
+    }
+  },
+  "parameters": {
+    "webSiteName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "planName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('webSiteName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "serverFarmId": "[parameters('planName')]",
+        "siteConfig": {
+          "windowsFxVersion": "dotnetcore|6.0",
+          "alwaysOn": true
+        }
+      }
+    }
+  ]
+}
