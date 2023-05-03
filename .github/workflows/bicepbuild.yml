@@ -30,8 +30,8 @@ jobs:
     - name: deploy
       uses: azure/arm-deploy@v1
       with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/randomquotes.bicep
-          parameters: 'webSiteName=webappsarah appname=sarahapp skucode=S1'
-          failOnStdErr: false
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./Bicep/randomquotes.bicep
+        parameters: 'webSiteName=webappsarah appname=sarahapp skucode=S1 osType=Windows'
+        failOnStdErr: false
